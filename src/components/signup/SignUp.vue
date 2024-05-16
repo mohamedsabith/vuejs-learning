@@ -3,6 +3,7 @@ import Loading from "../loading/Loading.vue";
 import { validateEmail, validatePhoneNumber } from "../../utils/validation.js";
 import ErrorMessage from "../errorMessage/ErrorMessage.vue";
 import { signUpUserApi } from "../../api/index.js";
+import { useToast } from "vue-toastification";
 
 export default {
   components: {
@@ -33,32 +34,31 @@ export default {
       selectedFile: null,
     };
   },
+  setup() {
+    const toast = useToast();
+    return { toast };
+  },
   methods: {
     async onSubmit() {
       this.validateForm();
       if (this.isFormValid) {
         this.loading = true;
-        console.log("11");
         try {
-          console.log("aaa2222");
           if (this.selectedFile) {
             this.formData.image = await this.toBase64(this.selectedFile);
           }
 
-          console.log(this.formData);
           const response = await signUpUserApi(this.formData);
-          console.log("User signed up successfully:", response.data);
+          console.log("User signed up successfully", response.data);
 
           localStorage.setItem("email", JSON.stringify(response.data.email));
-          localStorage.setItem(
-            "phoneNumber",
-            JSON.stringify(response.data.phoneNumber)
-          );
+          localStorage.setItem('isLoggedIn', true);
 
+          this.toast.success("User created successfully");
           setTimeout(() => {
             this.$router.push("/dashboard");
             this.loading = false;
-          }, 2000);
+          }, 3000);
         } catch (error) {
           console.error("Error signing up:", error);
           alert(error);

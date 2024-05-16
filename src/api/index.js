@@ -4,7 +4,7 @@ const API = axios.create({ baseURL: "http://localhost:3000" });
 
 export const signUpUserApi = (userData) => API.post("/users", userData);
 export const signInUserApi = (email, password) => API.get("/users", { params: { email, password } });
-export const getAllUser = () => API.post("/users");
+export const getAllUser = () => API.get("/users");
 
 export const getGoogleAccessToken = (code, clientId) =>
   axios.post("https://oauth2.googleapis.com/token", {

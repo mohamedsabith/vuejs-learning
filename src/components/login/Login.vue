@@ -98,6 +98,7 @@ export default {
           if (user) {
             this.toast.success("Login successful!");
             localStorage.setItem('isLoggedIn', true);
+            localStorage.setItem("email", JSON.stringify(this.formData.email));
             setTimeout(() => {
               this.$router.push("/dashboard");
             }, 3000);
