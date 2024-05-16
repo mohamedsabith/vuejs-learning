@@ -1,35 +1,43 @@
 <template>
-    <div class="dashboard-container">
-      <h1>Welcome to the Dashboard</h1>
-      <div>
-        <p>Email: {{ email }}</p>
-        <p>Phone Number: {{ phoneNumber }}</p>
+  <div class="dashboard">
+    <Header />
+    <div class="main-content">
+      <SideNav />
+      <div class="content">
+        <!-- Your main content goes here -->
+        <router-view></router-view>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        email: '',
-        phoneNumber: ''
-      };
-    },
-    mounted() {
-      this.email = JSON.parse(localStorage.getItem('email'));
-      this.phoneNumber = JSON.parse(localStorage.getItem('phoneNumber'));
-    }
-  };
-  </script>
-  
-  <style scoped>
-  .dashboard-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-  }
-  </style>
-  
+  </div>
+</template>
+
+<script>
+import Header from '../header/Header.vue';
+import SideNav from '../sideNav/SideNav.vue';
+
+export default {
+  components: {
+    Header,
+    SideNav,
+  },
+};
+</script>
+
+<style scoped>
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto; /* Enable scrolling if content exceeds container height */
+}
+</style>

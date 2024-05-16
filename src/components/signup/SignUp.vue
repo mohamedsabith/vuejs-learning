@@ -2,6 +2,7 @@
 import Loading from "../loading/Loading.vue";
 import { validateEmail, validatePhoneNumber } from "../../utils/validation.js";
 import ErrorMessage from "../errorMessage/ErrorMessage.vue";
+import { signUpUserApi } from "../../api/index.js";
 
 export default {
   components: {
@@ -17,6 +18,7 @@ export default {
         dob: "",
         password: "",
         confirmPassword: "",
+        image: "",
       },
       errors: {
         email: "",
@@ -25,24 +27,51 @@ export default {
         dob: "",
         password: "",
         confirmPassword: "",
+        image: "",
       },
       loading: false,
+      selectedFile: null,
     };
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       this.validateForm();
       if (this.isFormValid) {
         this.loading = true;
-        localStorage.setItem("email", JSON.stringify(this.formData.email));
-        localStorage.setItem(
-          "phoneNumber",
-          JSON.stringify(this.formData.phoneNumber)
-        );
-        setTimeout(() => {
-          this.$router.push("/dashboard");
-          this.loading = false;
-        }, 2000);
+        console.log("11");
+        try {
+          console.log("aaa2222");
+          if (this.selectedFile) {
+            this.formData.image = await this.toBase64(this.selectedFile);
+          }
+
+          console.log(this.formData);
+          const response = await signUpUserApi(this.formData);
+          console.log("User signed up successfully:", response.data);
+
+          localStorage.setItem("email", JSON.stringify(response.data.email));
+          localStorage.setItem(
+            "phoneNumber",
+            JSON.stringify(response.data.phoneNumber)
+          );
+
+          setTimeout(() => {
+            this.$router.push("/dashboard");
+            this.loading = false;
+          }, 2000);
+        } catch (error) {
+          console.error("Error signing up:", error);
+          alert(error);
+        }
+      }
+    },
+    onImageChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.selectedFile = file;
+        this.errors.image = "";
+      } else {
+        this.errors.image = "Image is required";
       }
     },
     validateForm() {
@@ -52,13 +81,13 @@ export default {
       this.validateField("dob");
       this.validateField("password");
       this.validateField("confirmPassword");
+      this.validateField("image");
     },
     validateField(fieldName) {
       switch (fieldName) {
         case "email":
           const emailError = validateEmail(this.formData.email);
           this.errors.email = emailError;
-          break;
           break;
         case "country":
           if (!this.formData.country) {
@@ -76,7 +105,6 @@ export default {
         case "dob":
           const selectedDate = new Date(this.formData.dob);
           const currentDate = new Date();
-
           if (!this.formData.dob) {
             this.errors.dob = "Date of Birth is required";
           } else if (selectedDate > currentDate) {
@@ -102,26 +130,44 @@ export default {
             this.errors.confirmPassword = "";
           }
           break;
+        case "image":
+          if (!this.selectedFile) {
+            this.errors.image = "Image is required";
+          } else {
+            this.errors.image = "";
+          }
+          break;
       }
+    },
+    toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
     },
   },
   computed: {
     isFormValid() {
       return (
         Object.values(this.errors).every((error) => !error) &&
-        Object.values(this.formData).every((value) => value !== "")
+        Object.values(this.formData).every(
+          (value) => value !== "" || (value === "" && this.selectedFile)
+        )
       );
     },
   },
 };
 </script>
 
-<!-- template -->
+
+
 <template>
   <div class="container-fluid bg-grey">
     <div class="row">
       <div
-        class="col-md-6 bg-light d-flex align-items-center justify-content-center"
+        class="col-md-6 bg-grey d-flex align-items-center justify-content-center"
       >
         <img
           src="https://cdni.iconscout.com/illustration/premium/thumb/sign-up-8694031-6983270.png"
@@ -162,7 +208,7 @@ export default {
                 >
                   <option value="">Select Country</option>
                   <option value="USA">USA</option>
-                  <option value="Canada">India</option>
+                  <option value="India">India</option>
                   <option value="Canada">Canada</option>
                   <option value="UK">UK</option>
                 </select>
@@ -225,11 +271,21 @@ export default {
                 <ErrorMessage :message="errors.confirmPassword" />
               </div>
               <div class="form-group">
+                <label for="image">Profile Image</label>
+                <input
+                  type="file"
+                  id="image"
+                  @change="onImageChange"
+                  class="form-control"
+                  :class="{ 'is-invalid': errors.image }"
+                />
+                <ErrorMessage :message="errors.image" />
+              </div>
+              <div class="form-group">
                 <button
                   type="submit"
                   class="btn btn-primary btn-block"
                   style="width: 100%"
-                  :disabled="!isFormValid"
                 >
                   Register
                 </button>
@@ -242,7 +298,6 @@ export default {
   </div>
 </template>
 
-<!-- style -->
 <style scoped>
 .is-invalid {
   border-color: #dc3545 !important;

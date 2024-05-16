@@ -19,3 +19,5 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 2. Navigate to the project directory.
 3. npm install
 4. npm run dev
+5. Create a db.json file to act as your database
+6. json-server --watch db.json --port 3000 (Start the JSON Server)

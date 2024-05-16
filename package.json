@@ -10,11 +10,16 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.9.0",
+    "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "bootstrap-vue": "^2.23.1",
+    "dotenv": "^16.4.5",
+    "google-auth-library": "^9.9.0",
     "vee-validate": "^4.5.8",
     "vue": "^3.4.26",
     "vue-router": "^4.3.2",
+    "vue-toastification": "^2.0.0-rc.5",
+    "vue3-google-login": "^2.0.26",
     "yup": "^1.4.0"
   },
   "devDependencies": {
