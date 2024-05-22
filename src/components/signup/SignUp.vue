@@ -52,6 +52,7 @@ export default {
           console.log("User signed up successfully", response.data);
 
           localStorage.setItem("email", JSON.stringify(response.data.email));
+          localStorage.setItem("userId", JSON.stringify(response.data.id));
           localStorage.setItem('isLoggedIn', true);
 
           this.toast.success("User created successfully");

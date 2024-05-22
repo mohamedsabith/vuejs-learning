@@ -3,7 +3,8 @@ import axios from "axios";
 const API = axios.create({ baseURL: "http://localhost:3000" });
 
 export const signUpUserApi = (userData) => API.post("/users", userData);
-export const signInUserApi = (email, password) => API.get("/users", { params: { email, password } });
+export const signInUserApi = (email, password) =>
+  API.get("/users", { params: { email, password } });
 export const getAllUser = () => API.get("/users");
 
 export const getGoogleAccessToken = (code, clientId) =>
@@ -20,3 +21,7 @@ export const getUserDetailsByToken = (accessToken) =>
       Authorization: `Bearer ${accessToken}`,
     },
   });
+
+export const addNewPost = (postData) => API.post("/posts", postData);
+export const fetchUserPosts  = (userId) =>
+  API.get("/posts", { params: { userId } });

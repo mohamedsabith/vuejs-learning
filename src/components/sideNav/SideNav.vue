@@ -1,8 +1,18 @@
 <template>
   <nav class="sidenav">
     <ul>
-      <li :class="{ 'selected': selectedItem === 'dashboard' }" @click="selectItem('dashboard')">USERS</li>
-      <li :class="{ 'selected': selectedItem === 'profile' }" @click="selectItem('profile')">PROFILE</li>
+      <li
+        :class="{ selected: selectedItem === 'dashboard' }"
+        @click="selectItem('dashboard')"
+      >
+        USERS
+      </li>
+      <li
+        :class="{ selected: selectedItem === 'posts' }"
+        @click="selectItem('posts')"
+      >
+        POSTS
+      </li>
     </ul>
   </nav>
 </template>
@@ -11,14 +21,22 @@
 export default {
   data() {
     return {
-      selectedItem: 'dashboard'
+      selectedItem: "dashboard",
     };
   },
   methods: {
     selectItem(item) {
-      this.selectedItem = item;
-    }
-  }
+      console.log(item);
+      if (this.selectedItem !== item) {
+        this.selectedItem = item;
+        if (item === "dashboard") {
+          this.$router.push("/dashboard");
+        } else if (item === "posts") {
+          this.$router.push("/posts");
+        }
+      }
+    },
+  },
 };
 </script>
 
@@ -35,7 +53,7 @@ ul {
 }
 
 li {
-  margin-bottom: 20px; /* Added some space above each list item */
+  margin-bottom: 20px; 
   cursor: pointer;
   padding: 10px;
   border-radius: 5px;
@@ -45,5 +63,6 @@ li {
   font-weight: bold;
   background-color: #007bff; /* Change background color for selected item */
   color: #fff; /* Change text color for selected item */
+  text-transform: uppercase;
 }
 </style>

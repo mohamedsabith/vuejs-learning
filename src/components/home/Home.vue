@@ -59,10 +59,12 @@ export default defineComponent({
           userInfo.code,
           this.clientId
         );
-        await getUserDetailsByToken(data.access_token);
+        const response = await getUserDetailsByToken(data.access_token);
+        console.log(response.data);
       } catch (error) {
         console.log(error);
       }
+      // localStorage.setItem("email", JSON.stringify(response.data.email));
       localStorage.setItem("isLoggedIn", true);
       this.$router.push("/dashboard");
     },

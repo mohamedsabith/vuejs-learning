@@ -4,6 +4,7 @@ import App from './App.vue'
 import vue3GoogleLogin from 'vue3-google-login'
 import router from './routes/router'
 import Toast, { POSITION } from 'vue-toastification';
+import { createVfm } from 'vue-final-modal'
 import 'vue-toastification/dist/index.css';
 
 const app = createApp(App)
@@ -14,6 +15,9 @@ app.use(Toast, {
   position: POSITION.TOP_RIGHT,
   timeout: 3000,
 });
+
+const vfm = createVfm()
+app.use(vfm);
 
 app.use(vue3GoogleLogin, {
   clientId: '885861646042-g61v356ajtjaknmiku5hko9ae73b70e6.apps.googleusercontent.com'
